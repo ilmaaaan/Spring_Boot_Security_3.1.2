@@ -3,41 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>All users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <body>
-    <h1>Users will be here asap!</h1>
-    <div>
-        <table border="1">
-            <thead>
-            <tr>
-                <th>id</th>
-                <th>Name</th>
-                <th>Lastname</th>
-                <th>Salary</th>
-                <th>Operations</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each = "user: ${users}">
-                <td th:text = "${user.getId()}">id</td>
-                <td><a th:text = "${user.getName()}">name</a></td>
-                <td th:text = "${user.getLastName()}">lastName</td>
-                <td th:text = "${user.getSalary()}">salary</td>
-                <td>
-                    <a th:href = "@{/edit?id={id}(id = ${user.getId()})}">Update</a>
-                </td>
-                <td>
-                    <form th:method="delete" th:action = "@{/?id={id}(id = ${user.getId()})}">
-                        <input type = "submit" value = "Delete"/>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-<br>
 <div>
-    <a th:href = "@{/new}">Add new user</a>
-</div>
-</body>
+<!--Admin panel-->
+    <h1>Admin panel</h1>
+        <div>
+            <table>
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Username</th>
+                    <th>Salary</th>
+                    <th>Password</th>
+                    <th>Roles</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each = "user: ${users}">
+                    <td th:text = "${user.getId()}">id</td>
+                    <td><a th:text = "${user.getUsername()}">name</a></td>
+                    <td th:text = "${user.getSalary()}">salary</td>
+                    <td th:text = "${user.getPassword()}">password</td>
+                    <td th:text = "${user.getListRoles()}">roles</td>
+                    <td>
+                        <a th:href = "@{/admin/edit?id={id}(id = ${user.getId()})}">Edit</a>
+                    </td>
+                    <td>
+                        <form th:method="delete" th:action = "@{admin/?id={id}(id = ${user.getId()})}">
+                            <input type = "submit" value = "Delete"/>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    <br>
+        <div>
+            <a th:href = "@{/admin/new}">Add new user</a>
+        </div>
+        <br>
+        <div>
+            <a th:href = "@{/user}">User</a>
+        </div>
+        <br>
+        <div>
+            <a th:href = "@{/logout}">Logout</a>
+        </div>
+    </div>
+    </body>
 </html>

@@ -3,24 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit user</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <body>
+<div class = "container text-center">
 <h1>You can edit user here!</h1>
 <div>
-    <form th:method = "patch" th:action = "@{/?id={id}(id = ${user.getId()})}" th:object = "${user}">
+    <form th:method = "post" th:action = "@{/admin/save}" th:object = "${user}">
+        <input type="hidden" th:field="*{id}" th:value="*{getId()}">
         <label for = "name">Name</label>
-        <input type = "text" th:field="*{name}" id = "name"/>
-        <br><br>
-        <label for = "lastName">Lastname</label>
-        <input type = "text" th:field="*{lastName}" id = "lastName"/>
+        <input type = "text" th:field="*{username}" id = "name"/>
         <br><br>
         <label for = "salary">Salary</label>
         <input type = "text" th:field="*{salary}" id = "salary"/>
         <br><br>
+        <label for = "password">Password</label>
+        <input type = "password" th:field="*{password}" id = "password"/>
+        <br><br>
+        <p>
+            <label>Roles:
+                <input type="checkbox" name="roles" th:field="*{roles}"
+                       th:each="role : ${roles}"
+                       th:text="${role.getName().substring(5)}" class = "m-2"
+                       th:value="${role.getId()}"
+                />
+            </label>
+        </p>
         <input type = "submit" value = "Update!"/>
     </form>
     <br>
     <a th:href = "@{/}">All users</a>
+</div>
 </div>
 </body>
 </htm>

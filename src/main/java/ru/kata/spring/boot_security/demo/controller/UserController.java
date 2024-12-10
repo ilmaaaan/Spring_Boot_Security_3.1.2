@@ -4,25 +4,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.service.UserServiceImp;
+import ru.kata.spring.boot_security.demo.service.UserService;
+
+import java.security.Principal;
 
 @Controller
-public class RegistrationController {
+public class UserController {
+
+    private final UserService userService;
 
     @Autowired
-    private UserServiceImp userService;
-
-    @Autowired
-    private RoleDao roleDao;
+    public UserController(UserService userService) {
+        this.userService = userService;}
 
     @GetMapping("/user")
-    public String showUser(Model model){
-        model.addAttribute("user", new User());
-        return "user";
+    public String showUser(Model model, Principal principal) {
+        User user = userService.findByName(principal.getName());
+        model.addAttribute("user", user);
+        return "/user";
     }
 
 }

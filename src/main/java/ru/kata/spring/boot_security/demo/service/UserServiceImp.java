@@ -1,52 +1,87 @@
-package com.spring.spring_boot.service;
+package ru.kata.spring.boot_security.demo.service;
 
-import com.spring.spring_boot.dao.UserDao;
-import com.spring.spring_boot.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import ru.kata.spring.boot_security.demo.dao.RoleDao;
+import ru.kata.spring.boot_security.demo.dao.UserDao;
+import ru.kata.spring.boot_security.demo.model.Role;
+import ru.kata.spring.boot_security.demo.model.User;
 
-import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImp implements UserService {
 
-    private UserDao userDao;
+    private final PasswordEncoder passwordEncoder;
+    private final UserDao userDao;
+    private final RoleDao roleDao;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Autowired
-    public UserServiceImp(UserDao userDao) {
+    public UserServiceImp(@Lazy PasswordEncoder passwordEncoder, UserDao userDao, RoleDao roleDao) {
+        this.passwordEncoder = passwordEncoder;
         this.userDao = userDao;
-    }
-
-
-    @Override
-    @Transactional
-    public void addUser(User user) {
-        userDao.addUser(user);
+        this.roleDao = roleDao;
     }
 
     @Override
-    @Transactional
-    public void deleteUser(int id) {
-        userDao.deleteUser(id);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userDao.findUserByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(), user.getPassword(), mapRolesToGrantedAuthorities(user.getRoles()));
     }
 
-    @Override
-    @Transactional
-    public void updateUser(User user) {
-        userDao.updateUser(user);
+    public User getById(Long id) {
+        User user = userDao.findById(id).get();
+        return user;
     }
 
-    @Override
-    @Transactional
-    public User getById(int id) {
-        return userDao.getById(id);
+    public User findByName(String name) {
+        Optional<User> user = Optional.ofNullable(userDao.findUserByUsername(name));
+        return user.orElse(new User());
     }
 
-    @Override
-    @Transactional
     public List<User> getUsers() {
-        return userDao.getUsers();
+        return userDao.findAll();
     }
+
+    public void save(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userDao.save(user);
+    }
+
+    public void updateUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userDao.save(user);
+    }
+
+    public void deleteUser(Long id) {
+        userDao.deleteById(id);
+    }
+
+    public List<Role> getRoles() {
+        return roleDao.findAll();
+    }
+
+
+    private Collection<? extends GrantedAuthority> mapRolesToGrantedAuthorities(Collection<Role> roles) {
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+    }
+
 }
