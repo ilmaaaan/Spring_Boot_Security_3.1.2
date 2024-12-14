@@ -8,39 +8,72 @@
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <body>
-<div class = "fs-3 ps-4 me-1 d-inline-block">
-    <span class = "fw-bolder" th:text = "${authUser.getUsername()}"></span>
-    <span> with roles: </span>
-    <span th:text="${authUser.getListRoles()}"></span>
-</div>
 <div>
-    <form th:action="@{/logout}" th:method="post">
-        <input type = "submit" value = "Logout">
-    </form>
+    <div class="container-fluid ps-0">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="navbar-brand ms-4 h1">
+                <span th:text="${authUser.getUsername()}"></span>
+                <span> with roles: </span>
+                <span th:text="${authUser.getListRoles()}"></span>
+            </div>
+            <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <div class="">
+                            <form class="nav-link" th:action="@{/logout}" th:method="post">
+                                <button type="submit" class="btn btn-link text-decoration-none text-muted">Logout
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <div class="row">
+        <div class="col-3">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab"
+                   aria-controls="v-pills-profile" aria-selected="false">User</a>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel"
+                     aria-labelledby="v-pills-home-tab">
+                        <!--                    User information-page-->
+                    <div class = "container">
+                        <h1 class="p-2">User's information-page</h1>
+                        <div class="container border m-2 p-2">
+                            <h4>User info</h4>
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col">id</th>
+                                    <th scope="col">Username</th>
+                                    <th scope="col">Salary</th>
+                                    <th scope="col">Password</th>
+                                    <th scope="col">Roles</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td th:text="${authUser.getId()}">id</td>
+                                    <td><a th:text="${authUser.getUsername()}">name</a></td>
+                                    <td th:text="${authUser.getSalary()}">salary</td>
+                                    <td th:text="${authUser.getPassword()}">password</td>
+                                    <td th:text="${authUser.getListRoles()}">roles</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<h1>User's information table</h1>
-<div>
-    <table>
-        <thead>
-        <tr>
-            <th>id</th>
-            <th>Username</th>
-            <th>Salary</th>
-            <th>Password</th>
-            <th>Roles</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td th:text = "${user.getId()}">id</td>
-            <td><a th:text = "${user.getUsername()}">name</a></td>
-            <td th:text = "${user.getSalary()}">salary</td>
-            <td th:text = "${user.getPassword()}">password</td>
-            <td th:text = "${user.getListRoles()}">roles</td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-<br>
+
 </body>
 </html>

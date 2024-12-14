@@ -10,16 +10,16 @@
 <div class = "container text-center">
 <h1>You can edit user here!</h1>
 <div>
-    <form th:method = "post" th:action = "@{/admin/save}" th:object = "${user}">
-        <input type="hidden" th:field="*{id}" th:value="*{getId()}">
+    <form th:method = "post" th:action = "@{/admin/edit}" th:object = "${editedUser}">
+        <input name="id" type="hidden"  th:field="*{id}" >
         <label for = "name">Name</label>
-        <input type = "text" th:field="*{username}" id = "name"/>
+        <input name="username" type = "text" th:field="*{username}" id = "name"/>
         <br><br>
         <label for = "salary">Salary</label>
-        <input type = "text" th:field="*{salary}" id = "salary"/>
+        <input name="salary" type = "text" th:field="*{salary}" id = "salary"/>
         <br><br>
         <label for = "password">Password</label>
-        <input type = "password" th:field="*{password}" id = "password"/>
+        <input name="password" type = "password" th:field="*{password}" id = "password"/>
         <br><br>
         <p>
             <label>Roles:

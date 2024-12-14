@@ -26,33 +26,29 @@ public class AdminController {
         model.addAttribute("authUser", userService.findByName(principal.getName()));
         List<User> users = userService.getUsers();
         model.addAttribute("users", users);
-        return "admin";
-    }
-
-    @GetMapping()
-    public String addUser(Model model) {
         model.addAttribute("newUser", new User());
         model.addAttribute("roles", userService.getRoles());
         return "admin";
     }
 
-    @PostMapping()
-    public String saveUser(@ModelAttribute("newUser") User user) {
+    @PostMapping("/save")
+    public String saveUser(@ModelAttribute User user) {
         userService.save(user);
+        return "redirect:/admin";
+    }
+
+
+    @PostMapping("/edit")
+    public String editUser(@ModelAttribute("user") User user) {
+        userService.updateUser(user);
         return "redirect:/admin";
     }
 
     @GetMapping("/edit")
     public String updateUser(@RequestParam("id") Long id, Model model) {
-        model.addAttribute("user", userService.getById(id));
+        model.addAttribute("editedUser", userService.getById(id));
         model.addAttribute("roles", userService.getRoles());
         return "edit";
-    }
-
-    @PostMapping("/save")
-    public String editUser(@ModelAttribute("user") User user) {
-        userService.updateUser(user);
-        return "redirect:/admin";
     }
 
     @DeleteMapping()
