@@ -17,7 +17,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final SuccessUserHandler successUserHandler;
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public WebSecurityConfig(SuccessUserHandler successUserHandler, UserService userService) {
@@ -50,5 +50,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         authProvider.setUserDetailsService(userService);
         return authProvider;
     }
-
 }

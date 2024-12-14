@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
+
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -18,22 +20,24 @@ public class AdminController {
     public AdminController(UserService userService) {
         this.userService = userService;
     }
+
     @GetMapping()
-    public String printUsers(Model model) {
+    public String printUsers(Model model, Principal principal) {
+        model.addAttribute("authUser", userService.findByName(principal.getName()));
         List<User> users = userService.getUsers();
         model.addAttribute("users", users);
         return "admin";
     }
 
-    @GetMapping("/new")
+    @GetMapping()
     public String addUser(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("newUser", new User());
         model.addAttribute("roles", userService.getRoles());
-        return "new";
+        return "admin";
     }
 
     @PostMapping()
-    public String saveUser(@ModelAttribute("user") User user) {
+    public String saveUser(@ModelAttribute("newUser") User user) {
         userService.save(user);
         return "redirect:/admin";
     }

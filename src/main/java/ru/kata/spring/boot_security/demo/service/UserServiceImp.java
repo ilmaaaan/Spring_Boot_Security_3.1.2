@@ -64,7 +64,7 @@ public class UserServiceImp implements UserService {
     public void save(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Set<Role> roles = user.getRoles();
-        roles.add(new Role("ROLE_USER"));
+        roles.add(roleDao.findByName("ROLE_USER"));
         user.setRoles(roles);
         userDao.save(user);
     }
@@ -78,8 +78,8 @@ public class UserServiceImp implements UserService {
         userDao.deleteById(id);
     }
 
-    public List<Role> getRoles() {
-        return roleDao.findAll();
+    public Set<Role> getRoles() {
+        return new HashSet<>(roleDao.findAll());
     }
 
 

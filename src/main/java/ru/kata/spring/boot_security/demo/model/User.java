@@ -105,6 +105,10 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
+
     public String getListRoles() {
         String s = roles.stream().map(role -> role.getName().substring(5)).collect(Collectors.joining(" "));
         return s == null ? "" : s;

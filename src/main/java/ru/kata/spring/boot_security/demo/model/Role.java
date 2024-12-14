@@ -31,6 +31,11 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
+    public Role(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Role(String name) {
         this.name = name;
     }
@@ -53,19 +58,19 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return name;
+        return getName();
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Role role = (Role) o;
-        return Objects.equals(id, role.id) && Objects.equals(name, role.name) && Objects.equals(users, role.users);
+        return Objects.equals(id, role.id) && Objects.equals(name, role.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, users);
+        return Objects.hash(id, name);
     }
 
     @Override

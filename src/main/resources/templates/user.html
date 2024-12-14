@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang = "en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang = "en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>All users</title>
@@ -7,6 +8,16 @@
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <body>
+<div class = "fs-3 ps-4 me-1 d-inline-block">
+    <span class = "fw-bolder" th:text = "${authUser.getUsername()}"></span>
+    <span> with roles: </span>
+    <span th:text="${authUser.getListRoles()}"></span>
+</div>
+<div>
+    <form th:action="@{/logout}" th:method="post">
+        <input type = "submit" value = "Logout">
+    </form>
+</div>
 <h1>User's information table</h1>
 <div>
     <table>
@@ -31,8 +42,5 @@
     </table>
 </div>
 <br>
-<div>
-    <a th:href = "@{/logout}">Logout</a>
-</div>
 </body>
 </html>

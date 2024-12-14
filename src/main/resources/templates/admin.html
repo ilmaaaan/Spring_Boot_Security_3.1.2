@@ -1,59 +1,174 @@
 <!DOCTYPE html>
-<html lang = "en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>All users</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <body>
 <div>
-<!--Admin panel-->
-    <h1>Admin panel</h1>
-        <div>
-            <table>
-                <thead>
-                <tr>
-                    <th>id</th>
-                    <th>Username</th>
-                    <th>Salary</th>
-                    <th>Password</th>
-                    <th>Roles</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each = "user: ${users}">
-                    <td th:text = "${user.getId()}">id</td>
-                    <td><a th:text = "${user.getUsername()}">name</a></td>
-                    <td th:text = "${user.getSalary()}">salary</td>
-                    <td th:text = "${user.getPassword()}">password</td>
-                    <td th:text = "${user.getListRoles()}">roles</td>
-                    <td>
-                        <a th:href = "@{/admin/edit?id={id}(id = ${user.getId()})}">Edit</a>
-                    </td>
-                    <td>
-                        <form th:method="delete" th:action = "@{admin/?id={id}(id = ${user.getId()})}">
-                            <input type = "submit" value = "Delete"/>
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+    <div class="container-fluid ps-0">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="navbar-brand ms-4 h1">
+                <span th:text="${authUser.getUsername()}"></span>
+                <span> with roles: </span>
+                <span th:text="${authUser.getListRoles()}"></span>
+            </div>
+            <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <div class="">
+                            <form class="nav-link" th:action="@{/logout}" th:method="post">
+                                <button type="submit" class="btn btn-link text-decoration-none text-muted">Logout
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"
+                   aria-controls="v-pills-home" aria-selected="true">Admin</a>
+                <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab"
+                   aria-controls="v-pills-profile" aria-selected="false">User</a>
+            </div>
         </div>
-    <br>
-        <div>
-            <a th:href = "@{/admin/new}">Add new user</a>
-        </div>
-        <br>
-        <div>
-            <a th:href = "@{/user}">User</a>
-        </div>
-        <br>
-        <div>
-            <a th:href = "@{/logout}">Logout</a>
+        <div class="col-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                     aria-labelledby="v-pills-home-tab">
+                    <div class="container">
+                        <!--                        Admin panel-->
+                        <h1>Admin panel</h1>
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Users table</a>
+                                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">New user</a>
+                            </div>
+                        </nav>
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                <h5 class="m-2">All users</h5>
+                                <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col">id</th>
+                                    <th scope="col">Username</th>
+                                    <th scope="col">Salary</th>
+                                    <th scope="col">Password</th>
+                                    <th scope="col">Roles</th>
+                                    <th scope="col">Edit</th>
+                                    <th scope="col">Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="user: ${users}">
+                                    <td th:text="${user.getId()}">id</td>
+                                    <td th:text="${user.getUsername()}">name</td>
+                                    <td th:text="${user.getSalary()}">salary</td>
+                                    <td th:text="${user.getPassword()}">password</td>
+                                    <td th:text="${user.getListRoles()}">roles</td>
+                                    <td>
+                                        <form th:method="post" th:action="@{admin/save}">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModalCenter">Edit</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form th:method="delete" th:action="@{admin/?id={id}(id = ${user.getId()})}">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                                    <h5 class="m-2">Add new user</h5>
+<!--                                    <form th:method="post" th:action="@{/admin}" th:object="${newUser}">-->
+<!--                                        <div class="form-group m-3 col-sm-4">-->
+<!--                                            <label for="username"><b>Name</b></label>-->
+<!--                                            <input th:field="*{username}" type="text" class="form-control" id="username" placeholder="Enter name">-->
+<!--                                        </div>-->
+<!--                                        <div class="form-group m-3 col-sm-4">-->
+<!--                                            <label for="password"><b>Password</b></label>-->
+<!--                                            <input th:field="*{password}"  type="password" class="form-control" id="password" aria-describedby="passwordHelp" placeholder="Password">-->
+<!--                                            <small id="passwordHelp" class="form-text text-muted">Never share your password with anyone else.</small>-->
+<!--                                        </div>-->
+<!--                                        <div class="form-group m-3 col-sm-4">-->
+<!--                                            <label for="salary"><b>Salary</b></label>-->
+<!--                                            <input th:field="*{salary}" type="text" class="form-control" id="salary" placeholder="Salary">-->
+<!--                                        </div>-->
+<!--                                        <button type="submit" class="btn btn-primary m-3">Save</button>-->
+<!--                                    </form>-->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                    <!--                    User information-page-->
+                    <h1>User's information-page</h1>
+                    <div>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">id</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Salary</th>
+                                <th scope="col">Password</th>
+                                <th scope="col">Roles</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td th:text="${authUser.getId()}">id</td>
+                                <td><a th:text="${authUser.getUsername()}">name</a></td>
+                                <td th:text="${authUser.getSalary()}">salary</td>
+                                <td th:text="${authUser.getPassword()}">password</td>
+                                <td th:text="${authUser.getListRoles()}">roles</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    </body>
+
+
+    <!-- Edit modal  -->
+    <div class="modal fade bd-example-modal-lg" id="editModalCenter" tabindex="-1" role="dialog" aria-labelledby="editModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content modal-lg">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLongTitle">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <form th:method="post" th:action="@{admin/save}">
+                        <button type="submit" class="btn btn-primary">Edit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
 </html>
