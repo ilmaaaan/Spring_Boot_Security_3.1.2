@@ -48,7 +48,7 @@ public class AdminController {
     public String updateUser(@RequestParam("id") Long id, Model model) {
         model.addAttribute("editedUser", userService.getById(id));
         model.addAttribute("roles", userService.getRoles());
-        return "edit";
+        return "old/edit";
     }
 
     @DeleteMapping()
