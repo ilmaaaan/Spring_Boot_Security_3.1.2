@@ -11,7 +11,7 @@ import java.util.Set;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class MyRESTController {
 
     private final UserService userService;
@@ -21,31 +21,31 @@ public class MyRESTController {
         this.userService = userService;
     }
 
-    @GetMapping("/users")
+    @GetMapping()
     public List<User> printUsers() {
         List<User> users = userService.getUsers();
         return users;
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public User getUser(@PathVariable("id") Long id) {
         User user = userService.getById(id);
         return user;
     }
 
-    @PostMapping("/users")
+    @PostMapping()
     public User saveUser(@RequestBody User user) {
         userService.save(user);
         return user;
     }
 
-    @PutMapping("/users")
+    @PutMapping()
     public User editUser(@RequestBody User user) {
         userService.updateUser(user);
         return user;
     }
 
-    @DeleteMapping("/users")
+    @DeleteMapping()
     public String deleteUser(@RequestParam("id") Long id) {
         userService.deleteUser(id);
         return "User with id = " + id + " was deleted";

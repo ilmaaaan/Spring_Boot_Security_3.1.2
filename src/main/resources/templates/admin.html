@@ -319,7 +319,7 @@
 
     //Получение всех ролей
     async function getRoles() {
-        const response = await fetch("api/roles", {
+        const response = await fetch("api/users/roles", {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
         }).then(result => {
